@@ -1,0 +1,58 @@
+person f:
+
+joy         55
+neutral     14
+surprise    10
+
+training with 55 images - 8 surprise, 11 neutral, 41 joy
+testing with 19 images  - 2 surprise, 3 neutral, 14 joy
+
+
+person a:
+
+joy         1
+neutral     4
+sadness     1
+surprise    30
+
+
+person b: {'anger': 2, 'disgust': 2, 'joy': 13, 'neutral': 14, 'surprise': 7}
+
+
+person c: {'joy': 9, 'neutral': 56, 'surprise': 9}
+
+
+person d: {'fear': 11, 'joy': 7, 'neutral': 26, 'sadness': 13, 'surprise': 1}
+
+
+person e: {'joy': 24, 'neutral': 50}
+
+
+person g: {'joy': 9, 'neutral': 41, 'sadness': 3, 'surprise': 9}
+
+
+person h: {'joy': 56, 'neutral': 20, 'surprise': 2}
+
+
+person i: {'joy': 14, 'neutral': 49, 'surprise': 14}
+
+
+person j: {'joy': 68, 'neutral': 2, 'surprise': 3}
+
+
+person k: {'fear': 1, 'joy': 17, 'neutral': 5, 'sadness': 31, 'surprise': 2}
+
+
+person l: {'anger': 9, 'contempt': 1, 'disgust': 2, 'joy': 21, 'neutral': 11, 'surprise': 8}
+
+
+person m: {'joy': 38, 'neutral': 32, 'surprise': 2}
+
+
+person n: {'anger': 2, 'joy': 12, 'neutral': 30, 'sadness': 1, 'surprise': 3}
+
+
+person o: {'anger': 4, 'joy': 16, 'neutral': 40, 'sadness': 2, 'surprise': 6}
+
+
+person x: {'anger': 1, 'joy': 28, 'neutral': 38, 'sadness': 4, 'surprise': 2}
