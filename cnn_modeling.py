@@ -7,12 +7,6 @@ import os
 from random import shuffle
 from tqdm import tqdm
 
-ID = "f"
-TRAIN_PATH = "data\\{}\\train".format(ID)
-TEST_PATH = "data\\{}\\test".format(ID)
-IMG_X = 124
-IMG_Y = 124
-
 
 def number_to_emotion(number):
     if number == 1:
@@ -103,47 +97,126 @@ def test_data_with_label(labels=None):
 
 
 if __name__ == "__main__":
-    label_dic = create_labels()
-    training_data = train_data_with_label(labels=label_dic)
-    testing_data = test_data_with_label(labels=label_dic)
 
-    train_images = np.array([i[0] for i in training_data]).reshape((-1, IMG_X, IMG_Y, 1))
-    train_labels = np.array([i[1] for i in training_data])
-    test_images = np.array([i[0] for i in testing_data]).reshape((-1, IMG_X, IMG_Y, 1))
-    test_labels = np.array([i[1] for i in testing_data])
+    # loop for each person
+    persons = ["c", "d", "e", "f", "g", "h", "i", "k", "l", "m", "o", "x"]
+    results = {}
+    for person in persons:
 
-    model = keras.Sequential([
-        keras.layers.InputLayer(input_shape=(IMG_X, IMG_Y, 1)),
+        ID = person
+        TRAIN_PATH = "data\\{}\\train".format(ID)
+        TEST_PATH = "data\\{}\\test".format(ID)
+        IMG_X = 124
+        IMG_Y = 124
 
-        keras.layers.Conv2D(filters=90, kernel_size=5, strides=1, padding='same', activation='relu'),
-        keras.layers.MaxPool2D(pool_size=2, padding='same'),
+        # do it few times and collect the test accuracies
+        accuracies = []
+        for e in range(10):
+            label_dic = create_labels()
+            training_data = train_data_with_label(labels=label_dic)
+            testing_data = test_data_with_label(labels=label_dic)
 
-        keras.layers.Conv2D(filters=50, kernel_size=5, strides=2, padding='same', activation='relu'),
-        keras.layers.MaxPool2D(pool_size=2, padding='same'),
+            train_images = np.array([i[0] for i in training_data]).reshape((-1, IMG_X, IMG_Y, 1))
+            train_labels = np.array([i[1] for i in training_data])
+            test_images = np.array([i[0] for i in testing_data]).reshape((-1, IMG_X, IMG_Y, 1))
+            test_labels = np.array([i[1] for i in testing_data])
 
-        keras.layers.Conv2D(filters=30, kernel_size=5, strides=2, padding='same', activation='relu'),
-        keras.layers.MaxPool2D(pool_size=2, padding='same'),
+            # first model
+            """ model = keras.Sequential([
+                keras.layers.InputLayer(input_shape=(IMG_X, IMG_Y, 1)),
 
-        #keras.layers.Conv2D(filters=130, kernel_size=5, strides=2, padding='same', activation='relu'),
-        #keras.layers.MaxPool2D(pool_size=5, padding='same'),
+                keras.layers.Conv2D(filters=90, kernel_size=5, strides=1, padding='same', activation='relu'),
+                keras.layers.MaxPool2D(pool_size=2, padding='same'),
 
-        keras.layers.Dropout(rate=0.2),
-        keras.layers.Flatten(),
-        keras.layers.Dense(units=50, activation='relu'),
-        keras.layers.Dropout(rate=0.4),
-        #keras.layers.Dense(units=100, activation='relu'),
-        #keras.layers.Dropout(rate=0.4),
-        keras.layers.Dense(units=3, activation='softmax')
-    ])
+                keras.layers.Conv2D(filters=50, kernel_size=5, strides=2, padding='same', activation='relu'),
+                keras.layers.MaxPool2D(pool_size=2, padding='same'),
 
-    model.compile(optimizer='adam',
-                  loss='sparse_categorical_crossentropy',
-                  metrics=['accuracy'])
+                keras.layers.Conv2D(filters=30, kernel_size=5, strides=2, padding='same', activation='relu'),
+                keras.layers.MaxPool2D(pool_size=2, padding='same'),
 
-    model.fit(train_images, train_labels, epochs=40)
+                #keras.layers.Conv2D(filters=130, kernel_size=5, strides=2, padding='same', activation='relu'),
+                #keras.layers.MaxPool2D(pool_size=5, padding='same'),
 
-    test_loss, test_acc = model.evaluate(test_images, test_labels)
-    print('Test accuracy:', test_acc)
+                keras.layers.Dropout(rate=0.2),
+                keras.layers.Flatten(),
+                keras.layers.Dense(units=50, activation='relu'),
+                keras.layers.Dropout(rate=0.4),
+                #keras.layers.Dense(units=100, activation='relu'),
+                #keras.layers.Dropout(rate=0.4),
+                keras.layers.Dense(units=len(label_dic), activation='softmax')
+            ]) """
+
+            # second model
+            """model = keras.Sequential([
+                keras.layers.InputLayer(input_shape=(IMG_X, IMG_Y, 1)),
+
+                keras.layers.Conv2D(filters=32, kernel_size=3, strides=1, padding='same', activation='relu'),
+                keras.layers.BatchNormalization(),
+                keras.layers.Dropout(rate=0.2),
+
+                keras.layers.Conv2D(filters=64, kernel_size=3, strides=1, padding='same', activation='relu'),
+                keras.layers.BatchNormalization(),
+                keras.layers.Dropout(rate=0.2),
+                keras.layers.MaxPool2D(pool_size=2, padding='same'),
+
+                keras.layers.Flatten(),
+                keras.layers.Dense(units=512, activation='softmax')
+                # keras.layers.Dense(units=len(label_dic), activation='softmax')
+            ])"""
+
+            # third model
+            model = keras.Sequential([
+                keras.layers.InputLayer(input_shape=(IMG_X, IMG_Y, 1)),
+
+                keras.layers.Conv2D(filters=32, kernel_size=3, strides=1, padding='same', activation='relu'),
+                keras.layers.BatchNormalization(),
+                keras.layers.Dropout(rate=0.5),
+                keras.layers.MaxPool2D(pool_size=2, padding='same'),
+
+                keras.layers.Conv2D(filters=64, kernel_size=3, strides=1, padding='same', activation='relu'),
+                keras.layers.BatchNormalization(),
+                keras.layers.Dropout(rate=0.5),
+                keras.layers.MaxPool2D(pool_size=2, padding='same'),
+
+                keras.layers.Conv2D(filters=128, kernel_size=3, strides=1, padding='same', activation='relu'),
+                keras.layers.BatchNormalization(),
+                keras.layers.Dropout(rate=0.5),
+                keras.layers.MaxPool2D(pool_size=2, padding='same'),
+
+                keras.layers.Flatten(),
+                keras.layers.Dense(units=128, activation='relu'),
+                keras.layers.BatchNormalization(),
+                keras.layers.Dropout(rate=0.5),
+                keras.layers.Dense(units=len(label_dic) + 1, activation='softmax')
+            ])
+
+            model.compile(optimizer='adam',
+                          loss='sparse_categorical_crossentropy',
+                          metrics=['accuracy'])
+
+            model.fit(train_images, train_labels, epochs=30)
+
+            test_loss, test_acc = model.evaluate(test_images, test_labels)
+            accuracies.append((test_loss, test_acc))
+            print('Test loss: {}\nTest accuracy: {}'.format(test_loss, test_acc))
+            print("\nPerson: {}, {} of 10 \n".format(person, e))
+            del model
+
+        results[person] = accuracies
+
+        print("\nPerson: {}\n".format(person))
+        for a in accuracies:
+            print('Test accuracy: {}'.format(a[1]))
+
+    print("\n")
+    print("===========")
+    print("= SUMMARY =")
+    print("===========")
+    print("\nCNN 2")
+    for person, accuracies in results.items():
+        print("\n\nPerson: {}\n".format(person))
+        for a in accuracies:
+            print('Test loss: {}\nTest accuracy: {}'.format(a[0], a[1]))
 
     # show some classification
     """fig = plt.figure(figsize=(14, 14))
