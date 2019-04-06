@@ -122,29 +122,37 @@ if __name__ == "__main__":
             test_labels = np.array([i[1] for i in testing_data])
 
             # first model
-            """ model = keras.Sequential([
+            model = keras.Sequential([
                 keras.layers.InputLayer(input_shape=(IMG_X, IMG_Y, 1)),
 
-                keras.layers.Conv2D(filters=90, kernel_size=5, strides=1, padding='same', activation='relu'),
-                keras.layers.MaxPool2D(pool_size=2, padding='same'),
-
-                keras.layers.Conv2D(filters=50, kernel_size=5, strides=2, padding='same', activation='relu'),
-                keras.layers.MaxPool2D(pool_size=2, padding='same'),
-
-                keras.layers.Conv2D(filters=30, kernel_size=5, strides=2, padding='same', activation='relu'),
-                keras.layers.MaxPool2D(pool_size=2, padding='same'),
-
-                #keras.layers.Conv2D(filters=130, kernel_size=5, strides=2, padding='same', activation='relu'),
-                #keras.layers.MaxPool2D(pool_size=5, padding='same'),
-
+                keras.layers.Conv2D(filters=16, kernel_size=3, strides=1, padding='same', activation='relu'),
+                keras.layers.BatchNormalization(),
                 keras.layers.Dropout(rate=0.2),
+                keras.layers.MaxPool2D(pool_size=2, padding='same'),
+
+                keras.layers.Conv2D(filters=32, kernel_size=3, strides=1, padding='same', activation='relu'),
+                keras.layers.BatchNormalization(),
+                keras.layers.Dropout(rate=0.2),
+                keras.layers.MaxPool2D(pool_size=2, padding='same'),
+
+                keras.layers.Conv2D(filters=64, kernel_size=3, strides=1, padding='same', activation='relu'),
+                keras.layers.BatchNormalization(),
+                keras.layers.Dropout(rate=0.5),
+                keras.layers.MaxPool2D(pool_size=2, padding='same'),
+
+                keras.layers.Conv2D(filters=128, kernel_size=3, strides=1, padding='same', activation='relu'),
+                keras.layers.BatchNormalization(),
+                keras.layers.Dropout(rate=0.5),
+                keras.layers.MaxPool2D(pool_size=2, padding='same'),
+
+                keras.layers.Dropout(rate=0.25),
                 keras.layers.Flatten(),
-                keras.layers.Dense(units=50, activation='relu'),
-                keras.layers.Dropout(rate=0.4),
+                keras.layers.Dense(units=128, activation='relu'),
+                keras.layers.Dropout(rate=0.5),
                 #keras.layers.Dense(units=100, activation='relu'),
                 #keras.layers.Dropout(rate=0.4),
                 keras.layers.Dense(units=len(label_dic), activation='softmax')
-            ]) """
+            ])
 
             # second model
             """model = keras.Sequential([
@@ -152,20 +160,20 @@ if __name__ == "__main__":
 
                 keras.layers.Conv2D(filters=32, kernel_size=3, strides=1, padding='same', activation='relu'),
                 keras.layers.BatchNormalization(),
-                keras.layers.Dropout(rate=0.2),
+                keras.layers.Dropout(rate=0.5),
 
                 keras.layers.Conv2D(filters=64, kernel_size=3, strides=1, padding='same', activation='relu'),
                 keras.layers.BatchNormalization(),
-                keras.layers.Dropout(rate=0.2),
+                keras.layers.Dropout(rate=0.5),
                 keras.layers.MaxPool2D(pool_size=2, padding='same'),
 
                 keras.layers.Flatten(),
-                keras.layers.Dense(units=512, activation='softmax')
+                keras.layers.Dense(units=128, activation='softmax')
                 # keras.layers.Dense(units=len(label_dic), activation='softmax')
             ])"""
 
             # third model
-            model = keras.Sequential([
+            """model = keras.Sequential([
                 keras.layers.InputLayer(input_shape=(IMG_X, IMG_Y, 1)),
 
                 keras.layers.Conv2D(filters=32, kernel_size=3, strides=1, padding='same', activation='relu'),
@@ -188,7 +196,7 @@ if __name__ == "__main__":
                 keras.layers.BatchNormalization(),
                 keras.layers.Dropout(rate=0.5),
                 keras.layers.Dense(units=len(label_dic) + 1, activation='softmax')
-            ])
+            ])"""
 
             model.compile(optimizer='adam',
                           loss='sparse_categorical_crossentropy',
@@ -200,7 +208,10 @@ if __name__ == "__main__":
             accuracies.append((test_loss, test_acc))
             print('Test loss: {}\nTest accuracy: {}'.format(test_loss, test_acc))
             print("\nPerson: {}, {} of 10 \n".format(person, e))
+
             del model
+            training_data.clear()
+            testing_data.clear()
 
         results[person] = accuracies
 
